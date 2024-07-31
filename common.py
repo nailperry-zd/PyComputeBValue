@@ -716,8 +716,10 @@ def ComputeUnknownBValueFileNames(path, seriesUID = None):
 
     # Sort slices by position
     # All the duplicate position slices will be contiguous
+    # pair: one element in filesAndImages, like [filepath, Image]; so pair[1] is the Image
+    # np.inner: inner product. The result of inner product is sth like [x,y,z]. so the lamPositionKey should be the z value.
     lamPositionKey = lambda pair : np.inner(R.transpose(), _GetOrigin(pair[1]))[2]
-
+    # sort the files according to the z position of each slice
     filesAndImages.sort(key=lamPositionKey)
 
     numBValues = 0
@@ -727,7 +729,7 @@ def ComputeUnknownBValueFileNames(path, seriesUID = None):
         T = _GetOrigin(filesAndImages[i][1])
 
         # Identify contiguous range of slices with same position
-        try:
+        try:# for each z position, we should get numBValues slices. If we have b50,400,800,1200, then numBValues should be 4.
             inext = next(iter(j for j, pair in enumerate(filesAndImages[i:], start=i) if np.linalg.norm(T - _GetOrigin(pair[1])) > 1e-10))
         except StopIteration:
             inext = len(filesAndImages)
@@ -740,7 +742,7 @@ def ComputeUnknownBValueFileNames(path, seriesUID = None):
 
         lamIntensityKey = lambda pair : np.percentile(sitk.GetArrayViewFromImage(pair[1]), 90)
 
-        # Sort the slices by intensity
+        # Sort the slices by intensity (Because for a specific z position, we can get numBValues slices. We can differentiate them by intensity.)
 
         filesAndImages[i:inext] = sorted(filesAndImages[i:inext], key=lamIntensityKey, reverse=True)
 
