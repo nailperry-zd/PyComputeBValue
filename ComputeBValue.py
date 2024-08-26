@@ -194,16 +194,117 @@ def synthesise_b2000_039_to_070():# avoid using 'test_' because it may trigger p
         outputPath = os.path.join(bvalue_output_dir, rf"in_b{targetBValue}.nii.gz")
         main(modelType, outputPath, imagePaths, targetBValue)
 
+import glob
+def synthesise_b2000_prostatex(patien_range):# avoid using 'test_' because it may trigger pytest
+    for i in patien_range:
+        patient_id = 'ProstateX'
+        study_id = str(i).zfill(4)
+
+        bvalue_output_dir = rf'Y:\prostatex_recollected\input\images\ProstateX_{study_id}'
+        if not os.path.exists(bvalue_output_dir):
+            os.makedirs(bvalue_output_dir)
+        modelType = 'mono'
+        source_dwi = fr"C:\Users\dzha937\DEV\Data_Vault\PROSTATEx\PROSTATEx raw files\ProstateX-{study_id}"
+
+
+        # Retrieve files with suffix 'b50t.nii.gz'
+        files_b50 = glob.glob(os.path.join(source_dwi, '*b50t.nii.gz'))
+        # Retrieve files with suffix 'b400t.nii.gz'
+        files_b400 = glob.glob(os.path.join(source_dwi, '*b400t.nii.gz'))
+        # Retrieve files with suffix 'b800t.nii.gz'
+        files_b800 = glob.glob(os.path.join(source_dwi, '*b800t.nii.gz'))
+
+        if len(files_b50) < 1:
+            print(f'ProstateX_{study_id} missing b50')
+            continue
+        if len(files_b400) < 1:
+            print(f'ProstateX_{study_id} missing b400')
+            continue
+        if len(files_b800) < 1:
+            print(f'ProstateX_{study_id} missing b800')
+            continue
+
+        imagePaths = [f'{files_b50[0]}:50', f'{files_b400[0]}:400', f'{files_b800[0]}:800']
+        targetBValue = 2000
+        outputPath = os.path.join(bvalue_output_dir, rf"ProstateX_{study_id}_highb.nii.gz")
+        if not os.path.exists(outputPath):
+            main(modelType, outputPath, imagePaths, targetBValue)
+
+def synthesise_b2000_prostatex_caseb100(patien_range):# 191 missing b50 but has b100
+    for i in patien_range:
+        patient_id = 'ProstateX'
+        study_id = str(i).zfill(4)
+
+        bvalue_output_dir = rf'Y:\prostatex_recollected\input\images\ProstateX_{study_id}'
+        if not os.path.exists(bvalue_output_dir):
+            os.makedirs(bvalue_output_dir)
+        modelType = 'mono'
+        source_dwi = fr"C:\Users\dzha937\DEV\Data_Vault\PROSTATEx\PROSTATEx raw files\ProstateX-{study_id}"
+
+
+        # Retrieve files with suffix 'b50t.nii.gz'
+        files_b50 = glob.glob(os.path.join(source_dwi, '*b100t.nii.gz'))
+        # Retrieve files with suffix 'b400t.nii.gz'
+        files_b400 = glob.glob(os.path.join(source_dwi, '*b400t.nii.gz'))
+        # Retrieve files with suffix 'b800t.nii.gz'
+        files_b800 = glob.glob(os.path.join(source_dwi, '*b800t.nii.gz'))
+
+        if len(files_b50) < 1:
+            print(f'ProstateX_{study_id} missing b50')
+            continue
+        if len(files_b400) < 1:
+            print(f'ProstateX_{study_id} missing b400')
+            continue
+        if len(files_b800) < 1:
+            print(f'ProstateX_{study_id} missing b800')
+            continue
+
+        imagePaths = [f'{files_b50[0]}:100', f'{files_b400[0]}:400', f'{files_b800[0]}:800']
+        targetBValue = 2000
+        outputPath = os.path.join(bvalue_output_dir, rf"ProstateX_{study_id}_highb.nii.gz")
+        if not os.path.exists(outputPath):
+            main(modelType, outputPath, imagePaths, targetBValue)
+
+
+def synthesise_b2000_prostatex_caseb500(patien_range):# 199~202 missing b400 but has b500
+    for i in patien_range:
+        patient_id = 'ProstateX'
+        study_id = str(i).zfill(4)
+
+        bvalue_output_dir = rf'Y:\prostatex_recollected\input\images\ProstateX_{study_id}'
+        if not os.path.exists(bvalue_output_dir):
+            os.makedirs(bvalue_output_dir)
+        modelType = 'mono'
+        source_dwi = fr"C:\Users\dzha937\DEV\Data_Vault\PROSTATEx\PROSTATEx raw files\ProstateX-{study_id}"
+
+
+        # Retrieve files with suffix 'b50t.nii.gz'
+        files_b50 = glob.glob(os.path.join(source_dwi, '*b50t.nii.gz'))
+        # Retrieve files with suffix 'b400t.nii.gz'
+        files_b400 = glob.glob(os.path.join(source_dwi, '*b500t.nii.gz'))
+        # Retrieve files with suffix 'b800t.nii.gz'
+        files_b800 = glob.glob(os.path.join(source_dwi, '*b800t.nii.gz'))
+
+        if len(files_b50) < 1:
+            print(f'ProstateX_{study_id} missing b50')
+            continue
+        if len(files_b400) < 1:
+            print(f'ProstateX_{study_id} missing b500')
+            continue
+        if len(files_b800) < 1:
+            print(f'ProstateX_{study_id} missing b800')
+            continue
+
+        imagePaths = [f'{files_b50[0]}:50', f'{files_b400[0]}:500', f'{files_b800[0]}:800']
+        targetBValue = 2000
+        outputPath = os.path.join(bvalue_output_dir, rf"ProstateX_{study_id}_highb.nii.gz")
+        if not os.path.exists(outputPath):
+            main(modelType, outputPath, imagePaths, targetBValue)
+
 if __name__ == '__main__':
     # tst_multiple_inputs()
     # tst_single_input()
     # synthesise_b2000_039_to_070()
-    pattern_005_to_008 = r'\d+_ep2d_tra_b50_b400_b800_p2_192$'
-    range_005_to_008 = range(5, 9)
-    b_value_hint_005_to_008 = '50,400,800'
-
-    pattern_009_to_038 = r'\d+_ep2d_tra_b50_b400_b800_b1200$'
-    range_009_to_038 = range(9, 39)
-    b_value_hint_009_to_038 = '50,400,800,1200'
-    synthesise_b2000(range_005_to_008, pattern_005_to_008, b_value_hint_005_to_008)
-    # synthesise_b2000(range_009_to_038, pattern_009_to_038, b_value_hint_009_to_038)
+    # synthesise_b2000_prostatex(range(0, 204))
+    # synthesise_b2000_prostatex_caseb100(range(191, 192))
+    synthesise_b2000_prostatex_caseb500(range(199, 204))
